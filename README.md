@@ -12,11 +12,15 @@ In Jupyter Notebooks:
 [1] !pip3 install mpld3 --- AFTER RUNNING ONCE, DON'T RUN AGAIN OR CLONE
 
 [2] import sys
+
     sys.path.append('./packages') # only needs to be run after kernel has restarted
     
 [3] %matplotlib inline
+
     import annotate
+    
     import scipy.misc as misc
+    
     import matplotlib.pylab as plt
 
     im = misc.imread('stars.jpg')
