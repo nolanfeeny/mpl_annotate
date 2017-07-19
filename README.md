@@ -4,7 +4,7 @@ Annotation tool for matplotlib figures
 Click on figure to create a point (with x and y coordinates saved), drag existing points to update their locations.
 Works for images, plots, or any other matplotlib figure.
 
-INSTRUCTIONS:
+## INSTRUCTIONS:
 download or copy & paste "annotate.py"
 
 In Jupyter Notebooks:
