@@ -13,10 +13,11 @@ def plot(imgname):
     plt.imshow(im, origin='lower')
     return fig
 
+# FUNCTION CALLED IN THE NOTEBOOK
 def pickpoints(fig='', radius=4, color="white", x = 'x', y = 'y'):
     if not fig:
         fig = plt.gcf()
-    plugins.connect(fig, Annotate(radius, color, x = x, y = y)) # color='htmlcolorname', radius=int
+    plugins.connect(fig, Annotate(radius, color, x, y)) # color='htmlcolorname', radius=int
     plugins.connect(fig, plugins.MousePosition())
 
 # FORMATS x AND y LISTS INTO SHORTER DECIMALS, SO THEY'RE NOT TOO LENGTHY
@@ -40,7 +41,7 @@ class Annotate(plugins.PluginBase):
     Annotate.prototype = Object.create(mpld3.Plugin.prototype);
     Annotate.prototype.constructor = Annotate;
     Annotate.prototype.requiredProps = [];
-    Annotate.prototype.defaultProps = {radius: 4, color: "white"};
+    Annotate.prototype.defaultProps = {radius: 4, color: "white", x:'x', y: 'y'};
     function Annotate(fig, props){
         mpld3.Plugin.call(this, fig, props);
     };
@@ -52,24 +53,24 @@ class Annotate(plugins.PluginBase):
         var fig = this.fig;
         var ax = fig.axes;
         var dataset = [];
-        var x = 0;
-        var y = 0;
         var svg = d3.select(".mpld3-figure");   // existing svg element
         var radius = this.props.radius;
         var color = this.props.color;
+        var x = this.props.x;
+        var y = this.props.y;
         var ax = fig.axes[0];
         
         
         /// INDEXES HTML DOC TO PULL VALUES FOR x,y CALIBRATION ///
         
-        var xcal = document.getElementsByClassName('mpld3-baseaxes')[0].transform.animVal[0].matrix.e;
-        var ycal = document.getElementsByClassName('mpld3-baseaxes')[0].transform.animVal[0].matrix.f;
-        console.log(xcal);
+        var xcal = document.getElementsByClassName('mpld3-baseaxes')[0].transform["animVal"][0]["matrix"]["e"];
+        var ycal = document.getElementsByClassName('mpld3-baseaxes')[0].transform['animVal'][0]["matrix"].f;
+        console.log(document.getElementsByClassName('mpld3-baseaxes')[0].transform.animVal[0]["matrix"]);
         console.log(ycal);
         
-        var xcommand = "x = []";
+        var xcommand = x+" = []";
         IPython.notebook.kernel.execute(xcommand);
-        var ycommand = "y = []";
+        var ycommand = y+" = []";
         IPython.notebook.kernel.execute(ycommand);
         
         
@@ -79,8 +80,8 @@ class Annotate(plugins.PluginBase):
         
             return function() {
                 var pos = d3.mouse(this),
-                    x = ax.x.invert(pos[0]),
-                    y = ax.y.invert(pos[1]);
+                    xpos = ax.x.invert(pos[0]),
+                    ypos = ax.y.invert(pos[1]);
                     
                 var newpoint = {
                     cx: pos[0] + xcal,
@@ -97,10 +98,10 @@ class Annotate(plugins.PluginBase):
                     .attr(newpoint)
                     .call(drag);
                        
-                var xcommand = "x.append("+x+")";
+                var xcommand = x+".append("+xpos+")";
                 IPython.notebook.kernel.execute(xcommand);
                 console.log(xcommand);
-                var ycommand = "y.append("+y+")";
+                var ycommand = y+".append("+ypos+")";
                 IPython.notebook.kernel.execute(ycommand);
                 console.log(ycommand);
                    
@@ -133,8 +134,8 @@ class Annotate(plugins.PluginBase):
              d3.select(this).classed("dragging", false);
              var calib_cx = d3.select(this)[0][0].cx.animVal.value - xcal;
              var calib_cy = d3.select(this)[0][0].cy.animVal.value - ycal;
-             var xcommand = "x["+i+"] = "+ax.x.invert(calib_cx);
-             var ycommand = "y["+i+"] = "+ax.y.invert(calib_cy);
+             var xcommand = x+"["+i+"] = "+ax.x.invert(calib_cx);
+             var ycommand = y+"["+i+"] = "+ax.y.invert(calib_cy);
              IPython.notebook.kernel.execute(xcommand);
              IPython.notebook.kernel.execute(ycommand);
              console.log(xcommand);
@@ -147,6 +148,6 @@ class Annotate(plugins.PluginBase):
     def __init__(self, radius=4, color="white", x = 'x', y = 'y'):
         self.dict_ = {"type": "annotate",
                       "radius": radius,
-                      "color": color};
-        self.x = x;
-        self.y = y;
+                      "color": color,
+                      "x": x,
+                      "y": y};
