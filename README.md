@@ -25,7 +25,7 @@ cell [2]
     
 cell [3] 
 
-    im = misc.imread('stars.jpg')
+    im = misc.imread('sample_image.jpg')
     fig = plt.figure(figsize=(10,7))
     plt.imshow(im, origin='lower')
     annotate.pickpoints(color='cyan', radius=2) # default is color='white', radius=4
