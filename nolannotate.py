@@ -29,7 +29,7 @@ def cleanformat(var):
         for i in range(len(var)):
             varlist.append('{:05.2f}'.format(var[i]))
     return varlist
-        
+
     
         
 # MAIN CLASS THAT CONTAINS JAVASCRIPT CODE TO CREATE CIRCLES AND DRAG CIRCLES  
@@ -41,7 +41,7 @@ class Annotate(plugins.PluginBase):
     Annotate.prototype = Object.create(mpld3.Plugin.prototype);
     Annotate.prototype.constructor = Annotate;
     Annotate.prototype.requiredProps = [];
-    Annotate.prototype.defaultProps = {radius: 4, color: "white", x:'x', y: 'y'};
+    Annotate.prototype.defaultProps = {radius: 4, color: "white", x: 'x', y: 'y'};
     function Annotate(fig, props){
         mpld3.Plugin.call(this, fig, props);
     };
@@ -62,11 +62,10 @@ class Annotate(plugins.PluginBase):
         
         
         /// INDEXES HTML DOC TO PULL VALUES FOR x,y CALIBRATION ///
-        
-        var xcal = document.getElementsByClassName('mpld3-baseaxes')[0].transform["animVal"][0]["matrix"]["e"];
-        var ycal = document.getElementsByClassName('mpld3-baseaxes')[0].transform['animVal'][0]["matrix"].f;
-        console.log(document.getElementsByClassName('mpld3-baseaxes')[0].transform.animVal[0]["matrix"]);
-        console.log(ycal);
+        var xcal = this.parent.axes[0].position[0];
+        var ycal = this.parent.axes[0].position[1];
+        console.log('x calibration: ' + xcal);
+        console.log('y calibration: ' + ycal);
         
         var xcommand = x+" = []";
         IPython.notebook.kernel.execute(xcommand);
@@ -145,9 +144,11 @@ class Annotate(plugins.PluginBase):
 
     };"""
 
-    def __init__(self, radius=4, color="white", x = 'x', y = 'y'):
+    def __init__(self, radius=4, color="white", x ='x', y ='y'):
         self.dict_ = {"type": "annotate",
                       "radius": radius,
                       "color": color,
                       "x": x,
                       "y": y};
+        
+        
