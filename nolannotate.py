@@ -1,6 +1,10 @@
 # NECESSARY IMPORTS
 import matplotlib.pyplot as plt
 import matplotlib.image as img
+import sys
+sys.path.append('./packages')
+
+
 import mpld3
 from mpld3 import plugins
 mpld3.enable_notebook()
